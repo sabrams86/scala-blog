@@ -81,5 +81,4 @@ object Post {
     deletedRows == 1
   }
 
-
 }
