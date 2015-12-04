@@ -1,15 +1,15 @@
-@(data: List[(Int, String, String)])
+@(posts: List[Post])
 
 @main("Blog") {
 
   <h1>Scala Blog</h1>
   <a href="/posts/new">New Blog Post</a>
-  @for(e <- data){
-    <a href="/posts/@e._1">
-      <h2>@e._2</h2>
+  @for(post <- posts){
+    <a href="/posts/@post.id">
+      <h2>@post.title</h2>
     </a>
     <p>
-      @e._3
+      @post.content
     </p>
   }
 }

@@ -9,11 +9,28 @@ import scala.language.postfixOps
 import play.api.libs.json.{JsNull,Json,JsString,JsValue}
 
 case class Post(
+  id: Int,
   title: String,
   content: String
 )
 
 object Post {
+  // Parsers
+
+  val postParser: RowParser[Post] = {
+    int("id") ~
+    str("title") ~
+    str("content") map {
+      case id ~ title ~ content => Post(id, title, content)
+    }
+  }
+
+  val postsParser: ResultSetParser[List[Post]] = {
+    postParser *
+  }
+
+  // Database calls
+
   def insertPost(data: FormNewPost): Boolean = {
     val addedRows: Int = DB.withConnection { implicit connection =>
       SQL(
@@ -28,25 +45,25 @@ object Post {
     addedRows == 1
   }
 
-  def getPosts: List[(Int, String, String)] = {
+  def getPosts: List[Post] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
         select * from posts
         """
-      ).as( int("idposts") ~ str("title") ~ str("content") map(flatten) * )
+      ).as(postsParser)
     }
   }
 
-  def getPost(id: Long): List[(Int, String, String)] = {
+  def getPost(id: Long): Post = {
     DB.withConnection { implicit connection =>
       SQL(
         """
-        select * from posts where idposts = {id}
+        select * from posts where id = {id}
         """
       ).on(
         "id" -> id
-      ).as( int("idposts") ~ str("title") ~ str("content") map(flatten) * )
+      ).as(postsParser).head
     }
   }
 
@@ -56,7 +73,7 @@ object Post {
         """
         update posts
         set title={title}, content={content}
-        where idposts={id}
+        where id={id}
         """
       ).on(
         "id" -> id,
@@ -72,7 +89,7 @@ object Post {
       SQL(
         """
         delete from posts
-        where idposts={id}
+        where id={id}
         """
       ).on(
         "id" -> id

@@ -9,11 +9,29 @@ import scala.language.postfixOps
 import play.api.libs.json.{JsNull,Json,JsString,JsValue}
 
 case class Comment(
+  id: Int,
   author: String,
-  body: String
+  body: String,
+  postId: Int
 )
 
 object Comment{
+  // Parsers
+
+  val commentParser: RowParser[Comment] = {
+    int("id") ~
+    str("author") ~
+    str("body") ~
+    int("post_id") map {
+      case id ~ author ~ body ~ post_id => Comment(id, author, body, post_id)
+    }
+  }
+
+  val commentsParser: ResultSetParser[List[Comment]] = {
+    commentParser *
+  }
+
+  // Database calls
 
   def insertComment(postId: Long, data: FormComment): Boolean = {
     val addedRows: Int = DB.withConnection { implicit connection =>
@@ -33,7 +51,7 @@ object Comment{
     addedRows == 1
   }
 
-  def getComments(postId: Long): List[(Int, String, String, Int)] = {
+  def getComments(postId: Long): List[Comment] = {
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -42,11 +60,11 @@ object Comment{
         """
       ).on(
         "postId" -> postId
-      ).as( int("id") ~ str("author") ~ str("body") ~ int("post_id") map(flatten) * )
+      ).as(commentsParser)
     }
   }
 
-  def getComment(id: Long): List[(Int, String, String, Int)] = {
+  def getComment(id: Long): Comment = {
     DB.withConnection { implicit connection =>
       SQL(
         """
@@ -55,7 +73,7 @@ object Comment{
         """
       ).on(
         "id" -> id
-      ).as( int("id") ~ str("author") ~ str("body") ~ int("post_id") map(flatten) * )
+      ).as(commentsParser).head
     }
   }
 

@@ -1,28 +1,28 @@
-@(post: (Int, String, String), comments: List[(Int, String, String, Int)])
+@(post: Post, comments: List[Comment])
 
 @main("Blog") {
 
   <h1>Scala Blog</h1>
   <a href="/posts/new">New Blog Post</a>
   <a href="/posts">Back to the Blog!</a>
-  <h2>@post._2</h2>
+  <h2>@post.title</h2>
   <p>
-    @post._3
+    @post.content
   </p>
-  <a href="/posts/@post._1/edit">Edit</a>
+  <a href="/posts/@post.id/edit">Edit</a>
 
   <h3>Comments</h3>
-  <form action="/posts/@post._1/comments" method="post">
+  <form action="/posts/@post.id/comments" method="post">
     <input type="text" name="author" placeholder="Name">
     <input type="text" name="body" placeholder="Comment">
     <input type="submit" name="submit" value="Submit">
   </form>
   @for(comment <- comments){
     <p>
-      <strong>@comment._2</strong>
-      <span>@comment._3</strong>
-      <a href="/posts/@post._1/comments/@comment._1/edit">Edit</a>
-      <form action="/posts/@post._1/comments/@comment._1/delete" method="post">
+      <strong>@comment.author</strong>
+      <span>@comment.body</strong>
+      <a href="/posts/@post.id/comments/@comment.id/edit">Edit</a>
+      <form action="/posts/@post.id/comments/@comment.id/delete" method="post">
         <input type="submit" name="submit" value="Delete Comment">
       </form>
     </p>

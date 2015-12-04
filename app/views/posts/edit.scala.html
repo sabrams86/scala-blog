@@ -1,18 +1,18 @@
-@(post: (Int, String, String))
+@(post: Post)
 
 @main("New Post") {
 
   <h1>Edit post</h1>
-  <form action="/posts/@post._1/update" method="post">
+  <form action="/posts/@post.id/update" method="post">
     <label>Title
-      <input type="text" name="title" value="@post._2">
+      <input type="text" name="title" value="@post.title">
     </label>
     <label>Content
-      <textarea name="content" rows="8" cols="40">@post._3</textarea>
+      <textarea name="content" rows="8" cols="40">@post.content</textarea>
     </label>
     <input type="submit" name="name" value="Save Post">
   </form>
-  <form action="/posts/@post._1/delete" method="post">
+  <form action="/posts/@post.id/delete" method="post">
     <button type="submit" name="button">Delete</button>
   </form>
 }

@@ -21,7 +21,7 @@ class Comments extends Controller {
 
   def edit(postId: Long, id: Long) = Action { implicit response =>
     val comment = Comment.getComment(id)
-    Ok(views.html.comments.edit(comment(0)))
+    Ok(views.html.comments.edit(comment))
   }
 
   def update(postId: Long, id: Long) = Action { implicit response =>

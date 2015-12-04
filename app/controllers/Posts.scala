@@ -8,8 +8,8 @@ import models._
 class Posts extends Controller {
 
   def index = Action { implicit response =>
-    val data = Post.getPosts
-    Ok(views.html.posts.index(data))
+    val posts = Post.getPosts
+    Ok(views.html.posts.index(posts))
   }
 
   def newPost = Action { implicit response =>
@@ -31,12 +31,12 @@ class Posts extends Controller {
   def show(id: Long) = Action { implicit response =>
     val post = Post.getPost(id)
     val comments = Comment.getComments(id)
-    Ok(views.html.posts.show(post(0), comments))
+    Ok(views.html.posts.show(post, comments))
   }
 
   def edit(id: Long) = Action { implicit response =>
     val post = Post.getPost(id)
-    Ok(views.html.posts.edit(post(0)))
+    Ok(views.html.posts.edit(post))
   }
 
   def update(id: Long) = Action { implicit response =>
