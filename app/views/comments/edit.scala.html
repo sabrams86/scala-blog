@@ -1,0 +1,10 @@
+@(comment: (Int, String, String, Int))
+
+@main("Blog") {
+  <h2>Edit your comment</h2>
+  <form action="/posts/@comment._4/comments/@comment._1" method="post">
+    <input type="text" name="author" value="@comment._2">
+    <input type="text" name="body" value="@comment._3">
+    <input type="submit" name="submit" value="Save">
+  </form>
+}

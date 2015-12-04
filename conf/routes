@@ -1,0 +1,23 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                               controllers.Posts.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                   controllers.Assets.versioned(path="/public", file: Asset)
+
+GET     /posts                          controllers.Posts.index
+GET     /posts                          controllers.Posts.index
+GET     /posts/new                      controllers.Posts.newPost
+GET     /posts/:id                      controllers.Posts.show(id: Long)
+POST    /posts                          controllers.Posts.create
+GET     /posts/:id/edit                 controllers.Posts.edit(id: Long)
+POST    /posts/:id/update               controllers.Posts.update(id: Long)
+POST    /posts/:id/delete               controllers.Posts.destroy(id: Long)
+
+POST    /posts/:postId/comments             controllers.Comments.create(postId: Long)
+GET     /posts/:postId/comments/:id/edit    controllers.Comments.edit(postId: Long, id: Long)
+POST    /posts/:postId/comments/:id         controllers.Comments.update(postId: Long, id: Long)
+POST    /posts/:postId/comments/:id/delete  controllers.Comments.destroy(postId: Long, id: Long)
